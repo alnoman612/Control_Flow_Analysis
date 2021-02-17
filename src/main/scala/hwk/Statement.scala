@@ -189,7 +189,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
 
   def toDotGraph = " digraph {\n" + toDot.reduceLeft((c,e) => c + "\n"+e)+ "\n"
   def toSubgraph(edges : List [String], id: Long) = "subgraph cluster_" + id +
-    " {\n" + (edges.reduceLeft((c,e) => c+ "]\n" +e))+ "\n}"
+    " {\n" + (edges.reduceLeft((c,e) => c + "]\n" +e))+ "\n}"
 }
 
 case class Script(stmts : List[Statement]) extends  Statement
