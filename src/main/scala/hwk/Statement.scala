@@ -119,9 +119,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
           buildGraph(s2::r)
           val ex = s1.exit
           val et = s2.entry
-          //for (e <- ex){
             ex.addSucc(et)
-         // }
       }
     }
   }
@@ -145,9 +143,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
       case WhileStmt(_, body) => {
         body.buildGraph
         this.addSucc(body.entry)
-        //for(e <- body.exit){
         body.exit.addSucc(this)
-        //}
       }
       case _ =>
   }
