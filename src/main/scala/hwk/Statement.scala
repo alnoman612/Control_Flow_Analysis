@@ -141,21 +141,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
           }
         }
       }
-      case SwitchStmt(_, cases,defaultCase) =>{
-        val d = defaultCase match { case None => cases case Some(x) => cases ++ List(x)}
-        buildGraph(d)
-        for (c<- d){
-          addSucc(c.entry)
-        }
-      }
 
-      case DoWhileStmt(_, body) => {
-        body.buildGraph
-        this.addSucc(body.entry)
-       // for(e <- body.exit){
-        body.exit.addSucc(this)
-        //}
-      }
       case WhileStmt(_, body) => {
         body.buildGraph
         this.addSucc(body.entry)
@@ -166,7 +152,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
       case _ =>
   }
 
-  def dotStr: String = " \"" + this.id + " : " + (this match{
+  def dotStr: String = " \""+"la_" + this.id + "["+"label " +this.id+ " : " + (this match{
       case Script(stmts) => stmts.head.dotStr
       case BlockStmt(stmts) => stmts.head.dotStr
       case VarDeclListStmt(decls) => decls.head.dotStr
@@ -174,12 +160,12 @@ sealed abstract class Statement extends AbstractSyntaxTree {
       case WhileStmt(cond,_) => cond.toString
       case FunctionDecl(name, _) => "function " + name
       case _ => this.toString.trim
-  }) +" \""
+  }) +"]" +" \""
 
   def toDot: List[String] = this match {
     case Script(stmts) => stmts.flatMap(s => s.toDot ++ s.succ.map(e=> s.dotStr+ " -> " + e.dotStr))
     case BlockStmt(stmts) => stmts.flatMap(s => s.toDot ++ s.succ.map(e=> s.dotStr+ " -> " + e.dotStr))
-    case VarDeclListStmt(decls) => decls.flatMap(s => s.succ.map ( e => s.dotStr + " ->" + e.dotStr))
+    case VarDeclListStmt(decls) => decls.flatMap(s => s.succ.map ( e =>  s.dotStr + " ->" + e.dotStr))
     case IfStmt(cond,thenPart, elsePart) => thenPart.toDot ++ elsePart.toDot
     case WhileStmt(cond,body ) => List(toSubgraph ( body.toDot, this.id))
     case DoWhileStmt(cond, body) => List(toSubgraph ( body.toDot, this.id))
@@ -187,7 +173,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
   }
 
 
-  def toDotGraph = " digraph {\n" + toDot.reduceLeft((c,e) => c + "\n"+e)+ "\n"
+  def toDotGraph= " digraph {\n"+ toDot.reduceLeft((c,e) => c + "\n"+ e)+ "\n"
   def toSubgraph(edges : List [String], id: Long) = "subgraph cluster_" + id +
     " {\n" + (edges.reduceLeft((c,e) => c + "]\n" +e))+ "\n}"
 }
