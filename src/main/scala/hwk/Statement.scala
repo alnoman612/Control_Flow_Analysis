@@ -99,7 +99,7 @@ sealed abstract class Statement extends AbstractSyntaxTree {
       case Script (stmts) => stmts.last.entry
       case BlockStmt(stmts) => stmts.last.entry
       case VarDeclListStmt(decls) => decls.last.exit
-      case IfStmt(_, thenPart, elsePart ) => thenPart.exit  //::: (elsePart match { case EmptyStmt() => List (this) case _ => elsePart.exit})
+      case IfStmt(_, thenPart, elsePart ) => thenPart.exit
       case SwitchStmt(_, cases, defaultCase) => {
         val d = defaultCase match { case None => cases case Some(x) => cases ++ List(x)}
         d.last.exit
